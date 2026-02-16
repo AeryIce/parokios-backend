@@ -8,5 +8,6 @@ Route::get('/health', function () {
         'app' => config('app.name'),
         'env' => app()->environment(),
         'time' => now()->toIso8601String(),
+        'test' => 'branch-protection',
     ]);
 });
