@@ -28,9 +28,13 @@ FROM php:8.3-cli-alpine
 WORKDIR /app
 
 # PHP extensions needed for Laravel + Postgres
-RUN apk add --no-cache bash icu-dev oniguruma-dev libzip-dev zip unzip $PHPIZE_DEPS \
+# Runtime libs (tetap ada setelah build)
+RUN apk add --no-cache bash zip unzip icu-libs libzip postgresql-libs \
+    # Build deps (buat compile ext)
+    && apk add --no-cache --virtual .build-deps $PHPIZE_DEPS icu-dev libzip-dev oniguruma-dev postgresql-dev \
     && docker-php-ext-install intl pdo pdo_pgsql zip \
-    && apk del $PHPIZE_DEPS
+    && apk del .build-deps
+
 
 COPY --from=vendor /app /app
 
